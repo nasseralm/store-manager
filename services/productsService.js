@@ -1,17 +1,17 @@
-const Error = require('../middlewares/Error');
+const myError = require('../middlewares/Error');
 const productsModel = require('../models/productsModel');
 
 const productsService = {
 
   checkExistingProduct: async (id) => {
     const exists = await productsModel.checkExistingProduct(id);
-    if (!exists) return Error('Product not found');
+    if (!exists) return myError('Product not found');
   },
 
   checkManyExistingProducts: async (array) => {
     const products = await productsModel.listManyProducts(array);
     if (products.length !== array.length) {
-      return Error('Product not found');
+      return myError('Product not found');
     }
     return true;
   },

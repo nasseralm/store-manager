@@ -1,4 +1,4 @@
-const Error = require('../middlewares/Error');
+const myError = require('../middlewares/Error');
 const salesModel = require('../models/salesModel');
 const salesProductsModel = require('../models/salesProductsModel');
 
@@ -6,7 +6,7 @@ const salesService = {
 
   checkIfExists: async (id) => {
     const exists = await salesModel.exists(id);
-    if (!exists) return Error('Sale not found');
+    if (!exists) return myError('Sale not found');
   },
 
   listSales: async () => {
