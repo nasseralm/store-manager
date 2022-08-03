@@ -1,27 +1,24 @@
-const connection = require('./connection');
+const db = require('./connection');
 
-const listSales = async () => {
-  const query = `SELECT sp.sale_id AS saleId, s.date,
-sp.product_id AS productId, sp.quantity AS quantity
-FROM StoreManager.sales_products AS sp
-JOIN StoreManager.sales AS s
-ON sp.sale_id = s.id
-ORDER BY saleId ASC, productId ASC;`;
-const [sales] = await connection.execute(query);
-return sales;
-};
-const findSaleById = async (id) => {
-const query = `SELECT s.date,
-sp.product_id AS productId, sp.quantity AS quantity
-FROM StoreManager.sales_products AS sp
-JOIN StoreManager.sales AS s
-ON sp.sale_id = s.id
-WHERE sp.sale_id = ?;`;
-const [sale] = await connection.execute(query, [id]);
-return sale;
+const checkExistence = async (id) => {
+  const query = ' SELECT * FROM StoreManager.sales WHERE id = ? ';
+  const [[existent]] = await db.query(query, [id]);
+  return !!existent;
 };
 
-module.exports = {
-  listSales,
-  findSaleById,
+const createSale = async () => {
+  const query = 'INSERT INTO StoreManager.sales (date) VALUES (NOW())';
+  const [{ insertId }] = await db.query(query);
+  return insertId;
 };
+
+const deleteSale = async (id) => {
+  const query = 'DELETE FROM StoreManager.sales WHERE id = ?';
+  await db.query(query, [id]);
+};
+
+(module.exports = {
+  checkExistence,
+  createSale,
+  deleteSale,
+});
